@@ -25,7 +25,7 @@ export default function CustomersCreate() {
     const baseURL =
       (import.meta as any)?.env?.VITE_API_URL ||
       (import.meta as any)?.env?.VITE_API_BASE_URL ||
-      "http://localhost:8000";
+      "http://127.0.0.1:8000";
 
     const instance = axios.create({ baseURL });
     instance.interceptors.request.use((config) => {
