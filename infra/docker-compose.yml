@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    container_name: rectimocars_db
+    environment:
+      POSTGRES_USER: recti
+      POSTGRES_PASSWORD: recti123
+      POSTGRES_DB: rectimocars
+    ports:
+      - "5432:5432"
+    volumes:
+      - rectimocars_pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ../apps/api
+    container_name: rectimocars_api
+    depends_on:
+      - db
+    env_file:
+      - ../apps/api/.env
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: ../apps/web
+    container_name: rectimocars_web
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+
+volumes:
+  rectimocars_pgdata:
