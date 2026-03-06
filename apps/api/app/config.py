@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # config.py está en: apps/api/app/config.py
@@ -13,6 +14,13 @@ class Settings(BaseSettings):
     JWT_SECRET: str = "changeme-super-secret"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def normalize_database_url(cls, value: str) -> str:
+        if isinstance(value, str) and value.startswith("postgresql://"):
+            return value.replace("postgresql://", "postgresql+psycopg://", 1)
+        return value
 
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
