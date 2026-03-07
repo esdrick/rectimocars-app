@@ -8,7 +8,7 @@ export const api = axios.create({
 
 // 👉 Request interceptor: attach token automatically
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("token") || localStorage.getItem("access_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -20,6 +20,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      localStorage.removeItem("token");
       localStorage.removeItem("access_token");
       // opcional: redirigir a login
       window.location.href = "/login";

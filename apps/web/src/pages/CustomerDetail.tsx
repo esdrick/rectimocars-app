@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import { api } from "../api/client";
 
 /* =======================
    Types
@@ -73,26 +73,6 @@ function formatPricingTier(value?: string | null): string {
 
 export default function CustomerDetail() {
   const { id } = useParams<{ id: string }>();
-
-  const api = useMemo(() => {
-    const baseURL =
-      (import.meta as any)?.env?.VITE_API_URL ||
-      (import.meta as any)?.env?.VITE_API_BASE_URL ||
-      "http://127.0.0.1:8000";
-
-    const instance = axios.create({ baseURL });
-
-    instance.interceptors.request.use((config) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        config.headers = config.headers ?? {};
-        (config.headers as any).Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
-
-    return instance;
-  }, []);
 
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [orders, setOrders] = useState<WorkOrder[]>([]);

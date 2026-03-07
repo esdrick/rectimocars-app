@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import PaymentForm, { type PaymentOut } from "../components/payments/PaymentForm";
 import ConsumablesSection from "../components/inventory/ConsumablesSection";
+import { api } from "../api/client";
 
 type Service = {
   id: string;
@@ -159,24 +159,6 @@ function isLikelyUuid(value: string | null | undefined): boolean {
 export default function WorkOrderDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
-  const api = useMemo(() => {
-    const baseURL =
-      (import.meta as any)?.env?.VITE_API_URL ||
-      (import.meta as any)?.env?.VITE_API_BASE_URL ||
-      "http://127.0.0.1:8000";
-
-    const instance = axios.create({ baseURL });
-    instance.interceptors.request.use((config) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        config.headers = config.headers ?? {};
-        (config.headers as any).Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
-    return instance;
-  }, []);
 
   // Helpers to resolve customer and service names
   async function getCustomerName(customerId: string): Promise<{ name?: string; phone?: string; address?: string }> {

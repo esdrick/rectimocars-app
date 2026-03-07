@@ -1,8 +1,8 @@
 
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { api } from "../api/client";
 
 // Tipado básico alineado con backend
 export type Customer = {
@@ -16,24 +16,6 @@ export type Customer = {
 };
 
 export default function Customers() {
-  const api = useMemo(() => {
-    const baseURL =
-      (import.meta as any)?.env?.VITE_API_URL ||
-      (import.meta as any)?.env?.VITE_API_BASE_URL ||
-     "http://127.0.0.1:8000";
-
-    const instance = axios.create({ baseURL });
-    instance.interceptors.request.use((config) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        config.headers = config.headers ?? {};
-        (config.headers as any).Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
-    return instance;
-  }, []);
-
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
