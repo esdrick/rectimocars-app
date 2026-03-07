@@ -28,7 +28,7 @@ export default function Customers() {
       setError(null);
 
       try {
-        const res = await api.get<Customer[]>("/customers");
+        const res = await api.get<Customer[]>("/customers/");
         if (!mounted) return;
         setCustomers(res.data);
       } catch (e: any) {

@@ -55,7 +55,7 @@ export default function CustomersCreate() {
         notes: notes.trim() || undefined,
       };
 
-      const { data } = await api.post<Customer>("/customers", payload);
+      const { data } = await api.post<Customer>("/customers/", payload);
 
       // ✅ tras crear, ir al detalle o volver a lista
       navigate(`/customers/${data.id}`);
